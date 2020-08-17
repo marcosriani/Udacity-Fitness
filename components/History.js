@@ -8,14 +8,11 @@ import { fetchCalendarResults } from '../utils/api';
 class History extends Component {
   componentDidMount() {
     fetchCalendarResults()
-      .then(
-        (entries) => console.log(entries)
-        //   this.props.receiveEntries(entries)
-      )
+      .then((entries) => this.props.receiveEntries(entries))
       .then(({ entries }) => {
         if (!entries[timeToString()]) {
           this.props.addEntry({
-            [timeToString]: getDailyReminderValue(),
+            [timeToString()]: getDailyReminderValue(),
           });
         }
       });
