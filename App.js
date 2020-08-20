@@ -13,6 +13,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { purple, white, gray } from './utils/colors';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
+import EntryDetail from './components/EntryDetail';
 
 const store = createStore(reducer);
 
@@ -28,47 +29,67 @@ const Tab = createMaterialBottomTabNavigator();
 
 const Tabs = () => {
   return (
+    <Tab.Navigator
+      tabBarOptions={{
+        showIcon: true,
+        shifting: true,
+        navigationOptions: {
+          header: null,
+        },
+      }}
+      activeColor={Platform.OS === 'ios' ? purple : white}
+      inactiveColor={gray}
+      barStyle={{
+        backgroundColor: Platform.OS === 'ios' ? white : purple,
+        shadowColor: 'rgba(0,0,0,0.24)',
+        shadowOffset: {
+          width: 0,
+          height: 3,
+        },
+        shadowRadius: 6,
+        shadowOpacity: 1,
+      }}
+    >
+      <Tab.Screen
+        name='History'
+        component={History}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <Ionicons name='ios-bookmarks' size={26} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name='Add Entry'
+        component={AddEntry}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <FontAwesome name='plus-square' size={26} color={color} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
+
+const Stack = createStackNavigator();
+
+const MainNavigator = () => {
+  return (
     <NavigationContainer>
-      <Tab.Navigator
-        tabBarOptions={{
-          showIcon: true,
-          shifting: true,
-          navigationOptions: {
-            header: null,
-          },
-        }}
-        activeColor={Platform.OS === 'ios' ? purple : white}
-        inactiveColor={gray}
-        barStyle={{
-          backgroundColor: Platform.OS === 'ios' ? white : purple,
-          shadowColor: 'rgba(0,0,0,0.24)',
-          shadowOffset: {
-            width: 0,
-            height: 3,
-          },
-          shadowRadius: 6,
-          shadowOpacity: 1,
-        }}
-      >
-        <Tab.Screen
-          name='History'
-          component={History}
+      <Stack.Navigator>
+        <Stack.Screen name='Home' component={Tabs} />
+        <Stack.Screen
+          name='EntryDetail'
+          component={EntryDetail}
           options={{
-            tabBarIcon: ({ color }) => (
-              <Ionicons name='ios-bookmarks' size={26} color={color} />
-            ),
+            headerTintColor: white,
+            headerStyle: {
+              backgroundColor: purple,
+            },
           }}
         />
-        <Tab.Screen
-          name='Add Entry'
-          component={AddEntry}
-          options={{
-            tabBarIcon: ({ color }) => (
-              <FontAwesome name='plus-square' size={26} color={color} />
-            ),
-          }}
-        />
-      </Tab.Navigator>
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };
@@ -79,7 +100,7 @@ export default class App extends Component {
       <Provider store={store}>
         <View style={{ flex: 1 }}>
           <UdaciStatusBar backgroundColor={purple} barStyle='light-content' />
-          <Tabs />
+          <MainNavigator />
         </View>
       </Provider>
     );
