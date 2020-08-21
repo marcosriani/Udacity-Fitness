@@ -14,6 +14,7 @@ import { purple, white, gray } from './utils/colors';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
 import EntryDetail from './components/EntryDetail';
+import Live from './components/Live';
 
 const store = createStore(reducer);
 
@@ -65,6 +66,15 @@ const Tabs = () => {
         options={{
           tabBarIcon: ({ color }) => (
             <FontAwesome name='plus-square' size={26} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name='Live'
+        component={Live}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <Ionicons name='ios-speedometer' size={26} color={color} />
           ),
         }}
       />

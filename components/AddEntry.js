@@ -17,6 +17,7 @@ import { connect } from 'react-redux';
 import { addEntry } from '../actions';
 import { getDailyReminderValue } from '../utils/helpers';
 import { white, purple } from '../utils/colors';
+import { CommonActions } from '@react-navigation/native';
 
 const SubmitBtn = ({ onPress }) => {
   return (
@@ -88,6 +89,7 @@ class AddEntry extends Component {
     }));
 
     // Navigate to Home
+    this.toHome();
 
     // Save to 'DB' / Using a local storage
     submitEntry({ key, entry });
@@ -104,9 +106,18 @@ class AddEntry extends Component {
     });
 
     // Route to Home
+    this.toHome();
 
     // Update 'DB'
     removeEntry(key);
+  };
+
+  toHome = () => {
+    this.props.navigation.dispatch(
+      CommonActions.goBack({
+        key: 'AddEntry',
+      })
+    );
   };
 
   render() {

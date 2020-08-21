@@ -1,30 +1,84 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
+import { connect } from 'react-redux';
+import { white } from '../utils/colors';
+import MetricCard from './MetricCard';
+import { addEntry } from '../actions';
+import { removeEntry } from '../utils/api';
+import { timeToString, getDailyReminderValue } from '../utils/helpers';
+import TextButton from './TextButton';
 
 class EntryDetail extends Component {
-  static navigationOptions = ({ navigation }) => {
-    const { entryId } = navigation.state.params;
+  setTitle = (entryId) => {
+    if (!entryId) return;
 
-    const year = entryId.Slice(0, 4);
+    const year = entryId.slice(0, 4);
     const month = entryId.slice(5, 7);
     const day = entryId.slice(8);
 
-    return {
-      title: `${month}/${day}/${year}`,
-    };
+    this.props.navigation.setOptions({
+      title: `${day}/${month}/${year}`,
+    });
   };
 
+  reset = () => {
+    const { remove, goBack, entryId } = this.props;
+
+    remove();
+    goBack();
+    removeEntry(entryId);
+  };
+
+  shouldComponentUpdate(nextProps, nextState, nextContext) {
+    return nextProps.metrics && !nextProps.metrics.today;
+  }
+
   render() {
+    this.setTitle(this.props.entryId);
+
+    const { metrics } = this.props;
+
     return (
-      <View>
-        <Text>
-          Entry Detail -
-          {JSON.stringify(this.props.navigation.state.params.entryId)}
-          {/* Entry Detail - {JSON.stringify(this.props.route.params.entryId)} */}
-        </Text>
+      <View style={styles.container}>
+        <MetricCard metrics={metrics} />
+        <TextButton onPress={this.reset} style={{ margin: 20 }}>
+          RESET
+        </TextButton>
       </View>
     );
   }
 }
 
-export default EntryDetail;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: white,
+    padding: 15,
+  },
+});
+
+const mapStateToProps = (state, { route }) => {
+  const { entryId } = route.params;
+
+  return {
+    entryId,
+    metrics: state[entryId],
+  };
+};
+
+const mapDispatchToProps = (dispatch, { route, navigation }) => {
+  const { entryId } = route.params;
+
+  return {
+    remove: () =>
+      dispatch(
+        addEntry({
+          [entryId]:
+            timeToString() === entryId ? getDailyReminderValue() : null,
+        })
+      ),
+    goBack: () => navigation.goBack(),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(EntryDetail);
