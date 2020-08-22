@@ -15,6 +15,7 @@ import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
 import EntryDetail from './components/EntryDetail';
 import Live from './components/Live';
+import { setLocalNotification } from './utils/helpers';
 
 const store = createStore(reducer);
 
@@ -105,6 +106,10 @@ const MainNavigator = () => {
 };
 
 export default class App extends Component {
+  componentDidMount() {
+    setLocalNotification();
+  }
+
   render() {
     return (
       <Provider store={store}>

@@ -8,6 +8,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@react-native-community/image-editor": "^2.3.0",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-navigation/bottom-tabs": "^5.8.0",
     "@react-navigation/drawer": "^5.9.0",
@@ -17,8 +18,9 @@
     "@react-navigation/stack": "^5.9.0",
     "expo": "~38.0.9",
     "expo-constants": "~9.1.1",
-    "expo-location": "^8.3.0",
-    "expo-permissions": "^9.1.0",
+    "expo-image-picker": "~8.3.0",
+    "expo-location": "~8.2.1",
+    "expo-permissions": "~9.0.1",
     "expo-splash-screen": "^0.3.1",
     "expo-status-bar": "^1.0.0",
     "expo-updates": "~0.2.10",
